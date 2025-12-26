@@ -2,18 +2,18 @@ import streamlit as st
 import numpy as np
 import joblib
 
-# ---------------- LOAD MODEL & SCALER ---------------- #
+
 model = joblib.load("student_model.joblib")
 scaler = joblib.load("scaler.joblib")
 
-# ---------------- PAGE CONFIG ---------------- #
+
 st.set_page_config(
     page_title="Employee Attrition Prediction",
     page_icon="📊",
     layout="centered"
 )
 
-# ---------------- CUSTOM CSS ---------------- #
+
 st.markdown("""
 <style>
     /* Main background */
@@ -159,7 +159,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- TITLE ---------------- #
+
 st.title("📊 Employee Attrition Prediction System")
 st.markdown(
     "Predict whether an employee is *likely to leave* the company "
@@ -168,7 +168,7 @@ st.markdown(
 
 st.divider()
 
-# ---------------- USER INPUTS ---------------- #
+
 st.subheader("🔎 Enter Employee Details")
 
 col1, col2 = st.columns(2)
@@ -218,7 +218,7 @@ with col2:
 
 overtime = 1 if overtime == "Yes" else 0
 
-# ---------------- FEATURE VECTOR ---------------- #
+
 input_data = np.array([[ 
     age,
     monthly_income,
@@ -230,7 +230,7 @@ input_data = np.array([[
     overtime
 ]])
 
-# ---------------- PREDICTION ---------------- #
+
 if st.button("🔮 Predict Attrition"):
 
     # Scale input
@@ -254,6 +254,7 @@ if st.button("🔮 Predict Attrition"):
             f"🔢 **Retention Probability:** {1 - probability:.2%}"
         )
 
-# ---------------- FOOTER ---------------- #
+
 st.divider()
 st.caption("Developed as part of AI & ML Internship Project")
+
