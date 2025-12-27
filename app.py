@@ -12,156 +12,65 @@ st.set_page_config(
 # ---------------- CUSTOM CSS ---------------- #
 st.markdown("""
 <style>
-    /* Main container */
-    .main {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    
-    /* Card styling */
-    .css-1d391kg, .css-12oz5g7 {
-        background-color: white;
-        padding: 2rem;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* Metrics */
-    [data-testid="stMetricValue"] {
-        font-size: 2rem;
-        font-weight: bold;
-        color: #667eea;
-    }
-    
-    /* Buttons */
-    .stButton>button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 0.75rem 2rem;
-        font-size: 1rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        width: 100%;
-    }
-    
-    .stButton>button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
-    }
-    
-    /* Input fields */
-    .stTextInput>div>div>input, .stNumberInput>div>div>input {
-        border-radius: 8px;
-        border: 2px solid #e2e8f0;
-        padding: 0.75rem;
-        transition: border-color 0.3s ease;
-    }
-    
-    .stTextInput>div>div>input:focus, .stNumberInput>div>div>input:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-    
-    /* Selectbox */
-    .stSelectbox>div>div>select {
-        border-radius: 8px;
-        border: 2px solid #e2e8f0;
-        padding: 0.75rem;
-    }
-    
-    /* Sidebar */
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
-    }
-    
-    [data-testid="stSidebar"] .css-1d391kg {
-        background-color: transparent;
-    }
-    
-    /* Sidebar text */
-    [data-testid="stSidebar"] label, [data-testid="stSidebar"] p {
-        color: white !important;
-    }
-    
-    /* Radio buttons in sidebar */
-    [data-testid="stSidebar"] [data-baseweb="radio"] label {
-        background-color: rgba(255, 255, 255, 0.1);
-        padding: 0.75rem 1rem;
-        border-radius: 8px;
-        margin: 0.25rem 0;
-        transition: all 0.3s ease;
-    }
-    
-    [data-testid="stSidebar"] [data-baseweb="radio"] label:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-    }
-    
-    /* Title styling */
-    h1 {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-weight: 800;
-        margin-bottom: 1.5rem;
-    }
-    
-    /* Subheader styling */
-    h2, h3 {
-        color: #2d3748;
-        font-weight: 700;
-    }
-    
-    /* Alert boxes */
-    .stAlert {
-        border-radius: 8px;
-        border-left: 4px solid;
-        padding: 1rem;
-        margin: 1rem 0;
-    }
-    
-    /* Success box */
-    .stSuccess {
-        background-color: #f0fdf4;
-        border-left-color: #22c55e;
-    }
-    
-    /* Error box */
-    .stError {
-        background-color: #fef2f2;
-        border-left-color: #ef4444;
-    }
-    
-    /* Warning box */
-    .stWarning {
-        background-color: #fffbeb;
-        border-left-color: #f59e0b;
-    }
-    
-    /* Info box */
-    .stInfo {
-        background-color: #eff6ff;
-        border-left-color: #3b82f6;
-    }
-    
-    /* Card container */
-    .card {
-        background: white;
-        padding: 2rem;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        margin: 1rem 0;
-    }
-    
-    /* Divider */
-    hr {
-        margin: 2rem 0;
-        border: none;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #667eea, transparent);
-    }
+
+/* Page background */
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Main content area */
+section[data-testid="stMain"] {
+    background: transparent;
+}
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Sidebar text */
+section[data-testid="stSidebar"] * {
+    color: white !important;
+}
+
+/* Buttons */
+button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    border: none !important;
+    font-weight: 600 !important;
+}
+
+/* Metrics */
+div[data-testid="stMetricValue"] {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #667eea;
+}
+
+/* Inputs */
+input, select, textarea {
+    border-radius: 8px !important;
+    border: 2px solid #e2e8f0 !important;
+}
+
+/* Alerts */
+div[data-testid="stAlert"] {
+    border-radius: 8px;
+}
+
+/* Titles */
+h1 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
 </style>
 """, unsafe_allow_html=True)
+
 
 # ---------------- LOAD MODEL ---------------- #
 model = joblib.load("student_model.joblib")
@@ -537,3 +446,4 @@ if st.session_state.logged_in:
     main_app()
 else:
     login_page()
+
