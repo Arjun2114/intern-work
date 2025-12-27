@@ -360,47 +360,51 @@ def about_page():
     st.title("ℹ️ About the Project")
     st.markdown("<br>", unsafe_allow_html=True)
 
-    st.markdown("""
-<div style="background: white; padding: 2rem; border-radius: 12px; 
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);">
+    st.markdown(
+        dedent("""
+        <div style="background: white; padding: 2rem; border-radius: 12px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);">
 
-    <h3 style="color: #2d3748; margin-top: 1.5rem;">🎯 Project Objective</h3>
-    <p style="color: #4a5568; line-height: 1.8;">
-        To predict employee attrition using machine learning algorithms and assist
-        HR teams with data-driven, actionable recommendations for improving employee
-        retention rates.
-    </p>
+            <h3 style="color: #2d3748; margin-top: 1.5rem;">🎯 Project Objective</h3>
+            <p style="color: #4a5568; line-height: 1.8;">
+                To predict employee attrition using machine learning algorithms and assist
+                HR teams with data-driven, actionable recommendations for improving employee
+                retention rates.
+            </p>
 
-    <h3 style="color: #2d3748; margin-top: 1.5rem;">🛠️ Technologies Used</h3>
+            <h3 style="color: #2d3748; margin-top: 1.5rem;">🛠️ Technologies Used</h3>
 
-    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
-        <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px;">
-            <strong style="color: #1e40af;">🐍 Python</strong>
-            <p style="color: #64748b; margin: 0.25rem 0 0 0;">Core programming language</p>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px;">
+                    <strong style="color: #1e40af;">🐍 Python</strong>
+                    <p style="color: #64748b; margin: 0.25rem 0 0;">Core programming language</p>
+                </div>
+                <div style="background: #f0fdf4; padding: 1rem; border-radius: 8px;">
+                    <strong style="color: #166534;">🤖 Scikit-learn</strong>
+                    <p style="color: #64748b; margin: 0.25rem 0 0;">Machine learning framework</p>
+                </div>
+                <div style="background: #fef3c7; padding: 1rem; border-radius: 8px;">
+                    <strong style="color: #92400e;">🎨 Streamlit</strong>
+                    <p style="color: #64748b; margin: 0.25rem 0 0;">Interactive web interface</p>
+                </div>
+                <div style="background: #fce7f3; padding: 1rem; border-radius: 8px;">
+                    <strong style="color: #9f1239;">📊 Pandas & NumPy</strong>
+                    <p style="color: #64748b; margin: 0.25rem 0 0;">Data processing & analysis</p>
+                </div>
+            </div>
+
+            <h3 style="color: #2d3748; margin-top: 1.5rem;">🧠 Machine Learning Model</h3>
+            <p style="color: #4a5568; line-height: 1.8;">
+                <strong>Algorithm:</strong> Logistic Regression / Random Forest<br>
+                <strong>Accuracy:</strong> 85%<br>
+                <strong>Features:</strong> Age, Income, Experience, Satisfaction Metrics, Overtime
+            </p>
+
         </div>
-        <div style="background: #f0fdf4; padding: 1rem; border-radius: 8px;">
-            <strong style="color: #166534;">🤖 Scikit-learn</strong>
-            <p style="color: #64748b; margin: 0.25rem 0 0 0;">Machine learning framework</p>
-        </div>
-        <div style="background: #fef3c7; padding: 1rem; border-radius: 8px;">
-            <strong style="color: #92400e;">🎨 Streamlit</strong>
-            <p style="color: #64748b; margin: 0.25rem 0 0 0;">Interactive web interface</p>
-        </div>
-        <div style="background: #fce7f3; padding: 1rem; border-radius: 8px;">
-            <strong style="color: #9f1239;">📊 Pandas & NumPy</strong>
-            <p style="color: #64748b; margin: 0.25rem 0 0 0;">Data processing & analysis</p>
-        </div>
-    </div>
+        """),
+        unsafe_allow_html=True
+    )
 
-    <h3 style="color: #2d3748; margin-top: 1.5rem;">🧠 Machine Learning Model</h3>
-    <p style="color: #4a5568; line-height: 1.8;">
-        <strong>Algorithm:</strong> Logistic Regression / Random Forest<br>
-        <strong>Accuracy:</strong> 85%<br>
-        <strong>Features:</strong> Age, Income, Experience, Satisfaction Metrics, Overtime
-    </p>
-
-</div>
-""", unsafe_allow_html=True)
 
 
 # ---------------- MAIN APP ---------------- #
@@ -437,6 +441,7 @@ if st.session_state.logged_in:
     main_app()
 else:
     login_page()
+
 
 
 
