@@ -138,11 +138,17 @@ def dashboard():
     
     with col1:
         st.markdown("""
-            <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                        padding: 1.5rem; border-radius: 12px; text-align: center; color: white;'>
-                <h3 style='color: white; font-size: 1rem; margin: 0;'>Total Employees</h3>
-                <h1 style='color: white; font-size: 2.5rem; margin: 0.5rem 0;'>1,470</h1>
-            </div>
+            <div style='
+            background: linear-gradient(135deg, #a5b4fc 0%, #818cf8 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            color: #1e1b4b;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        '>
+            <h3 style='font-size: 1rem; margin: 0;'>Total Employees</h3>
+            <h1 style='font-size: 2.8rem; margin: 0.5rem 0; font-weight: 800;'>1,470</h1>
+        </div>
         """, unsafe_allow_html=True)
     
     with col2:
@@ -448,6 +454,7 @@ if st.session_state.logged_in:
     main_app()
 else:
     login_page()
+
 
 
 
