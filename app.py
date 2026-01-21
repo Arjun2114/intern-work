@@ -15,68 +15,98 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* App background */
-.stApp {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #ffffff;
+/* ========== GLOBAL RESET ========== */
+* {
+    font-family: inherit;
 }
 
-/* Main content wrapper */
+/* ========== APP BACKGROUND ========== */
+.stApp {
+    background: linear-gradient(135deg, #0f0f1a 0%, #0b0b12 100%);
+}
+
+/* ========== MAIN AREA ========== */
 .main > div {
     background: transparent;
+    color: inherit;
 }
 
-/* Sidebar */
+/* ========== SIDEBAR ========== */
 [data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(180deg, #6a7be7 0%, #7a56b6 100%);
 }
 [data-testid="stSidebar"] * {
-    color: #ffffff !important;
+    color: white !important;
 }
 
-/* ALL normal text */
-p, span, label, div, small {
-    color: #f5f5f5 !important;
-}
-
-/* Headings */
+/* ========== HEADINGS (LOCKED) ========== */
 h1, h2, h3, h4 {
-    color: #ffffff !important;
+    color: #7d8cff !important;
+    font-weight: 700;
 }
 
-/* Buttons */
+/* ========== NORMAL TEXT (LOCKED) ========== */
+p, span, label, li {
+    color: #e6e6f0 !important;
+}
+
+/* ========== INPUT LABELS ========== */
+label {
+    color: #dcdcff !important;
+    font-weight: 500;
+}
+
+/* ========== INPUT FIELDS ========== */
+input, textarea, select {
+    background-color: #1f1f2e !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    border: 1px solid #3b3b5c !important;
+}
+
+/* ========== BUTTONS ========== */
 .stButton > button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #ffffff !important;
-    border-radius: 8px;
-    border: none;
-    font-weight: 600;
+    background: linear-gradient(135deg, #6a7be7 0%, #7a56b6 100%) !important;
+    color: white !important;
+    border-radius: 10px !important;
+    border: none !important;
+    font-weight: 600 !important;
+    padding: 0.6rem 1.2rem !important;
 }
 
-/* Inputs */
-input, select, textarea {
-    color: #000000 !important;
-    background-color: #ffffff !important;
-    border-radius: 6px;
-}
-
-/* Card UI */
+/* ========== CARD DESIGN (LOCKED) ========== */
 .card {
-    background: #ffffff;
-    color: #000000 !important;
+    background: white;
+    color: #1b1b1b !important;
     padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    margin-bottom: 1rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    margin-bottom: 1.2rem;
 }
 
 .card * {
-    color: #000000 !important;
+    color: #1b1b1b !important;
 }
+
+/* ========== DASHBOARD METRIC CARDS ========== */
+.metric-card {
+    border-radius: 16px;
+    padding: 1.5rem;
+    color: white !important;
+    font-weight: 600;
+}
+
+/* ========== DROPDOWNS FIX ========== */
+[data-baseweb="select"] * {
+    color: white !important;
+}
+
+/* ========== REMOVE STREAMLIT WATERMARK SPACING ========== */
+footer {visibility: hidden;}
+header {visibility: hidden;}
 
 </style>
 """, unsafe_allow_html=True)
-
 
 
 # ---------------- LOAD MODEL ---------------- #
@@ -244,6 +274,7 @@ if st.session_state.logged_in:
     main()
 else:
     login_page()
+
 
 
 
