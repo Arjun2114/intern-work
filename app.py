@@ -206,6 +206,7 @@ def login_page():
 
 # ---------------- DASHBOARD ---------------- #
 def dashboard():
+    # ---------- TITLE ----------
     st.markdown(
         "<h1 style='color:#7d8cff; font-weight:700;'>⬜ HR Analytics Dashboard</h1>",
         unsafe_allow_html=True
@@ -213,6 +214,7 @@ def dashboard():
 
     st.markdown("<br>", unsafe_allow_html=True)
 
+    # ---------- METRIC CARDS ----------
     col1, col2, col3 = st.columns(3)
 
     with col1:
@@ -237,27 +239,33 @@ def dashboard():
             <h3>Model Accuracy</h3>
             <h1>85%</h1>
         </div>
+        """, unsafe_allow_html=True)
 
-    <div class="system-card">
-        <h2>📌 System Overview</h2>
-        <p>
-        This intelligent dashboard provides comprehensive employee attrition
-        analytics powered by machine learning. The system evaluates multiple
-        workforce factors to predict resignation risk and generate actionable
-        HR insights.
-        </p>
+    # ---------- SYSTEM OVERVIEW (OUTSIDE COLUMNS) ----------
+    st.markdown("""
+    <div class="center-wrapper">
+        <div class="system-card">
+            <h2>📌 System Overview</h2>
+            <p>
+            This intelligent dashboard provides comprehensive employee attrition
+            analytics powered by machine learning. The system evaluates multiple
+            workforce factors to predict resignation risk and generate actionable
+            HR insights.
+            </p>
 
-        <div class="feature-box feature-blue">
-            🎯 <b>Predictive Analytics</b><br>
-            ML-powered employee attrition forecasting
-        </div>
+            <div class="feature-box feature-blue">
+                🎯 <b>Predictive Analytics</b><br>
+                ML-powered employee attrition forecasting
+            </div>
 
-        <div class="feature-box feature-green">
-            💡 <b>Smart Recommendations</b><br>
-            Actionable HR strategies for retention improvement
+            <div class="feature-box feature-green">
+                💡 <b>Smart Recommendations</b><br>
+                Actionable HR strategies for retention improvement
+            </div>
         </div>
     </div>
-        """, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
+
 
 
 # ---------------- SINGLE PREDICTION ---------------- #
@@ -372,6 +380,7 @@ if st.session_state.logged_in:
     main()
 else:
     login_page()
+
 
 
 
