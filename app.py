@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import joblib
+import os
 
 # ---------------- PAGE CONFIG ---------------- #
 st.set_page_config(
@@ -49,9 +50,11 @@ h1 {
 """, unsafe_allow_html=True)
 
 # ---------------- LOAD MODEL ---------------- #
-model = joblib.load("student_model.joblib")
-scaler = joblib.load("scaler.joblib")
-feature_columns = joblib.load("model_features.joblib")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+model = joblib.load(os.path.join(BASE_DIR, "models", "student_model.joblib"))
+scaler = joblib.load(os.path.join(BASE_DIR, "models", "scaler.joblib"))
+feature_columns = joblib.load(os.path.join(BASE_DIR, "models", "model_features.joblib"))
 
 # ---------------- USERS ---------------- #
 USERS = {
@@ -194,3 +197,4 @@ if st.session_state.logged_in:
     main()
 else:
     login_page()
+
