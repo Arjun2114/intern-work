@@ -14,31 +14,43 @@ st.set_page_config(
 # ---------------- CUSTOM CSS ---------------- #
 st.markdown("""
 <style>
-body {
+
+/* Full app background */
+.stApp {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
-section[data-testid="stMain"] {
+
+/* Main content */
+.main > div {
     background: transparent;
 }
-section[data-testid="stSidebar"] {
+
+/* Sidebar */
+[data-testid="stSidebar"] {
     background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
 }
-section[data-testid="stSidebar"] * {
+[data-testid="stSidebar"] * {
     color: white !important;
 }
-button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-    color: white !important;
-    border-radius: 8px !important;
-    border: none !important;
-    font-weight: 600 !important;
+
+/* Buttons */
+.stButton > button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
 }
+
+/* Headings */
 h1 {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 800;
 }
+
+/* Card UI */
 .card {
     background: white;
     padding: 1.5rem;
@@ -46,8 +58,10 @@ h1 {
     box-shadow: 0 6px 20px rgba(0,0,0,0.15);
     margin-bottom: 1rem;
 }
+
 </style>
 """, unsafe_allow_html=True)
+
 
 # ---------------- LOAD MODEL ---------------- #
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -197,4 +211,5 @@ if st.session_state.logged_in:
     main()
 else:
     login_page()
+
 
