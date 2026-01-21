@@ -15,12 +15,13 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* Full app background */
+/* App background */
 .stApp {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
 }
 
-/* Main content */
+/* Main content wrapper */
 .main > div {
     background: transparent;
 }
@@ -30,37 +31,52 @@ st.markdown("""
     background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
 }
 [data-testid="stSidebar"] * {
-    color: white !important;
+    color: #ffffff !important;
+}
+
+/* ALL normal text */
+p, span, label, div, small {
+    color: #f5f5f5 !important;
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+    color: #ffffff !important;
 }
 
 /* Buttons */
 .stButton > button {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    color: #ffffff !important;
     border-radius: 8px;
     border: none;
     font-weight: 600;
 }
 
-/* Headings */
-h1 {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 800;
+/* Inputs */
+input, select, textarea {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+    border-radius: 6px;
 }
 
 /* Card UI */
 .card {
-    background: white;
+    background: #ffffff;
+    color: #000000 !important;
     padding: 1.5rem;
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.15);
     margin-bottom: 1rem;
 }
 
+.card * {
+    color: #000000 !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
+
 
 
 # ---------------- LOAD MODEL ---------------- #
@@ -178,12 +194,29 @@ def batch_prediction():
 # ---------------- ABOUT ---------------- #
 def about():
     st.title("ℹ️ About Project")
+
     st.markdown("""
     <div class="card">
-    This project predicts employee attrition using Machine Learning.
-    It supports single and batch predictions and provides HR insights.
+        <h3>Employee Attrition Prediction System</h3>
+        <p>
+        This project uses Machine Learning to predict whether an employee
+        is likely to leave the organization.
+        </p>
+
+        <ul>
+            <li>Single employee prediction</li>
+            <li>Batch prediction using CSV upload</li>
+            <li>Trained ML model with preprocessing</li>
+            <li>Deployed using Streamlit Cloud</li>
+        </ul>
+
+        <p>
+        This system helps HR teams take data-driven decisions
+        to reduce employee attrition.
+        </p>
     </div>
     """, unsafe_allow_html=True)
+
 
 # ---------------- MAIN APP ---------------- #
 def main():
@@ -211,5 +244,6 @@ if st.session_state.logged_in:
     main()
 else:
     login_page()
+
 
 
