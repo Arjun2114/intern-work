@@ -74,6 +74,7 @@ input, textarea, select {
     padding: 0.6rem 1.2rem !important;
 }
 
+
 /* ========== CARD DESIGN (LOCKED) ========== */
 .card {
     background: white;
@@ -88,13 +89,29 @@ input, textarea, select {
     color: #1b1b1b !important;
 }
 
-/* ========== DASHBOARD METRIC CARDS ========== */
-.metric-card {
-    border-radius: 16px;
-    padding: 1.5rem;
-    color: white !important;
-    font-weight: 600;
+/* ========== DASHBOARD GRADIENT METRIC CARDS ========== */
+.metric-purple {
+    background: linear-gradient(135deg, #6f7ee8, #7b5fcf);
 }
+
+.metric-pink {
+    background: linear-gradient(135deg, #ff9ad5, #ff5e86);
+}
+
+.metric-blue {
+    background: linear-gradient(135deg, #4cc3ff, #2ad4ff);
+}
+
+.metric-card h3 {
+    color: white !important;
+    margin-bottom: 0.5rem;
+}
+
+.metric-card h1 {
+    color: white !important;
+    font-size: 42px;
+}
+
 
 /* ========== DROPDOWNS FIX ========== */
 [data-baseweb="select"] * {
@@ -104,6 +121,43 @@ input, textarea, select {
 /* ========== REMOVE STREAMLIT WATERMARK SPACING ========== */
 footer {visibility: hidden;}
 header {visibility: hidden;}
+
+/* ========== SYSTEM OVERVIEW CARD ========== */
+.system-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-top: 3rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.system-card h2 {
+    color: #1f2a44 !important;
+    margin-bottom: 1rem;
+}
+
+.system-card p {
+    color: #5f6c8a !important;
+    font-size: 16px;
+}
+
+.feature-box {
+    border-radius: 14px;
+    padding: 1rem;
+    margin-top: 1rem;
+    font-weight: 500;
+}
+
+.feature-blue {
+    background: #eef4ff;
+    color: #1f3cff !important;
+}
+
+.feature-green {
+    background: #eefbf1;
+    color: #0f7a3a !important;
+}
+
 
 </style>
 """, unsafe_allow_html=True)
@@ -152,15 +206,59 @@ def login_page():
 
 # ---------------- DASHBOARD ---------------- #
 def dashboard():
-    st.title("📊 HR Analytics Dashboard")
+    st.markdown(
+        "<h1 style='color:#7d8cff; font-weight:700;'>⬜ HR Analytics Dashboard</h1>",
+        unsafe_allow_html=True
+    )
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.markdown('<div class="card"><h3>Total Employees</h3><h1>1470</h1></div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div class="metric-card metric-purple">
+            <h3>Total Employees</h3>
+            <h1>1470</h1>
+        </div>
+        """, unsafe_allow_html=True)
+
     with col2:
-        st.markdown('<div class="card"><h3>Attrition Rate</h3><h1>16%</h1></div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div class="metric-card metric-pink">
+            <h3>Attrition Rate</h3>
+            <h1>16%</h1>
+        </div>
+        """, unsafe_allow_html=True)
+
     with col3:
-        st.markdown('<div class="card"><h3>Model Accuracy</h3><h1>85%</h1></div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div class="metric-card metric-blue">
+            <h3>Model Accuracy</h3>
+            <h1>85%</h1>
+        </div>
+
+    <div class="system-card">
+        <h2>📌 System Overview</h2>
+        <p>
+        This intelligent dashboard provides comprehensive employee attrition
+        analytics powered by machine learning. The system evaluates multiple
+        workforce factors to predict resignation risk and generate actionable
+        HR insights.
+        </p>
+
+        <div class="feature-box feature-blue">
+            🎯 <b>Predictive Analytics</b><br>
+            ML-powered employee attrition forecasting
+        </div>
+
+        <div class="feature-box feature-green">
+            💡 <b>Smart Recommendations</b><br>
+            Actionable HR strategies for retention improvement
+        </div>
+    </div>
+        """, unsafe_allow_html=True)
+
 
 # ---------------- SINGLE PREDICTION ---------------- #
 def single_prediction():
@@ -274,6 +372,7 @@ if st.session_state.logged_in:
     main()
 else:
     login_page()
+
 
 
 
