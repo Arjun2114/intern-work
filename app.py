@@ -307,13 +307,13 @@ def single_prediction():
     # Create empty dataframe with all model features
     input_df = pd.DataFrame(columns=feature_columns)
 
-# Fill known values
-for key, value in input_dict.items():
-    if key in input_df.columns:
-        input_df.loc[0, key] = value
-
-# Fill remaining NaNs with 0
-input_df = input_df.fillna(0)
+    # Fill known values
+    for key, value in input_dict.items():
+        if key in input_df.columns:
+            input_df.loc[0, key] = value
+    
+    # Fill remaining NaNs with 0
+    input_df = input_df.fillna(0)
 
 
     if st.button("Predict"):
