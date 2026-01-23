@@ -206,7 +206,6 @@ def login_page():
 
 # ---------------- DASHBOARD ---------------- #
 def dashboard():
-    # ---------- TITLE ----------
     st.markdown(
         "<h1 style='color:#7d8cff; font-weight:700;'>⬜ HR Analytics Dashboard</h1>",
         unsafe_allow_html=True
@@ -241,7 +240,9 @@ def dashboard():
         </div>
         """, unsafe_allow_html=True)
 
-    # ---------- SYSTEM OVERVIEW (OUTSIDE COLUMNS) ----------
+    st.markdown("<br><br>", unsafe_allow_html=True)
+
+    # ---------- SYSTEM OVERVIEW ----------
     st.markdown("""
     <div class="center-wrapper">
         <div class="system-card">
@@ -252,19 +253,29 @@ def dashboard():
             workforce factors to predict resignation risk and generate actionable
             HR insights.
             </p>
-
-            <div class="feature-box feature-blue">
-                🎯 <b>Predictive Analytics</b><br>
-                ML-powered employee attrition forecasting
-            </div>
-
-            <div class="feature-box feature-green">
-                💡 <b>Smart Recommendations</b><br>
-                Actionable HR strategies for retention improvement
-            </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
+
+    # ---------- FEATURE BOXES (RENDER SEPARATELY) ----------
+    colA, colB = st.columns(2)
+
+    with colA:
+        st.markdown("""
+        <div class="feature-box feature-blue">
+            🎯 <b>Predictive Analytics</b><br>
+            ML-powered employee attrition forecasting
+        </div>
+        """, unsafe_allow_html=True)
+
+    with colB:
+        st.markdown("""
+        <div class="feature-box feature-green">
+            💡 <b>Smart Recommendations</b><br>
+            Actionable HR strategies for retention improvement
+        </div>
+        """, unsafe_allow_html=True)
+
 
 
 
@@ -381,6 +392,7 @@ if st.session_state.logged_in:
     main()
 else:
     login_page()
+
 
 
 
