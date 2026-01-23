@@ -293,9 +293,28 @@ def single_prediction():
     overtime = st.selectbox("OverTime", ["No", "Yes"])
     overtime = 1 if overtime == "Yes" else 0
 
-    input_df = pd.DataFrame([[age, income, years, job_sat, wlb, env_sat, overtime]],
-                            columns=feature_columns[:7])
-    input_df = input_df.reindex(columns=feature_columns, fill_value=0)
+    # Create input with exact feature structure
+    input_dict = {
+        "Age": age,
+        "MonthlyIncome": income,
+        "YearsAtCompany": years,
+        "JobSatisfaction": job_sat,
+        "WorkLifeBalance": wlb,
+        "EnvironmentSatisfaction": env_sat,
+        "OverTime": overtime
+    }
+
+    # Create empty dataframe with all model features
+    input_df = pd.DataFrame(columns=feature_columns)
+
+# Fill known values
+for key, value in input_dict.items():
+    if key in input_df.columns:
+        input_df.loc[0, key] = value
+
+# Fill remaining NaNs with 0
+input_df = input_df.fillna(0)
+
 
     if st.button("Predict"):
         scaled = scaler.transform(input_df)
@@ -392,6 +411,7 @@ if st.session_state.logged_in:
     main()
 else:
     login_page()
+
 
 
 
