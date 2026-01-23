@@ -268,6 +268,7 @@ def dashboard():
 
 
 
+
 # ---------------- SINGLE PREDICTION ---------------- #
 def single_prediction():
     st.title("🔮 Single Employee Prediction")
@@ -380,6 +381,7 @@ if st.session_state.logged_in:
     main()
 else:
     login_page()
+
 
 
 
