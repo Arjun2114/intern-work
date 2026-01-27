@@ -336,13 +336,13 @@ def single_prediction():
     
         scaled = scaler.transform(X)
     
-        pred = model.predict(scaled)[0]
         prob = model.predict_proba(scaled)[0][1]
-    
-        if pred == 1:
+
+        if prob >= 0.7:
             st.error(f"⚠️ Likely to Leave ({prob:.2%})")
         else:
             st.success(f"✅ Likely to Stay ({1-prob:.2%})")
+
 
 # ---------------- BATCH PREDICTION ---------------- #
 def batch_prediction():
@@ -372,10 +372,9 @@ def batch_prediction():
 
             scaled = scaler.transform(X)
 
-            preds = model.predict(scaled)
             probs = model.predict_proba(scaled)[:,1]
 
-            df["Attrition_Prediction"] = np.where(preds==1, "Likely to Leave", "Likely to Stay")
+            df["Attrition_Prediction"] = np.where(probs >= 0.7, "Likely to Leave", "Likely to Stay")
             df["Attrition_Probability"] = probs
 
             st.subheader("Results")
@@ -440,5 +439,6 @@ if st.session_state.logged_in:
     main()
 else:
     login_page()   
+
 
 
