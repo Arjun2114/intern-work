@@ -434,6 +434,58 @@ def about():
 
     components.html(
         """
+<style>
+body {
+    background: transparent;
+    font-family: Arial, sans-serif;
+}
+
+.about-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.about-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 900px;
+    width: 100%;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+}
+
+.about-card h3 {
+    color: #1f2a44;
+    margin-top: 25px;
+}
+
+.about-card p {
+    color: #4b5568;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.tech-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 15px;
+}
+
+.tech-box {
+    border-radius: 14px;
+    padding: 18px;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.tech-python { background: #eef4ff; color: #1f3cff; }
+.tech-sklearn { background: #eefbf1; color: #0f7a3a; }
+.tech-streamlit { background: #fff6d6; color: #8a5b00; }
+.tech-pandas { background: #fdebf3; color: #9b1c5d; }
+</style>
+
 <div class="about-wrapper">
     <div class="about-card">
 
@@ -478,7 +530,7 @@ def about():
     </div>
 </div>
         """,
-        height=650,
+        height=700,
     )
 
 
@@ -508,6 +560,7 @@ if st.session_state.logged_in:
     main()
 else:
     login_page()   
+
 
 
 
