@@ -163,12 +163,49 @@ header {visibility: hidden;}
     color: #0f7a3a !important;
 }
 
-/* ========== ABOUT PAGE FIX ========== */
-.about-card p,
-.about-card li,
-.about-card ul {
-    color: #1b1b1b !important;
+/* ========== ABOUT PAGE STYLES ========== */
+.about-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
 }
+
+.about-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+}
+
+.about-card h3 {
+    color: #1f2a44 !important;
+    margin-top: 1.5rem;
+}
+
+.about-card p,
+.about-card li {
+    color: #4b5568 !important;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.tech-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.tech-box {
+    border-radius: 14px;
+    padding: 1.2rem;
+    font-weight: 500;
+}
+
+.tech-python { background: #eef4ff; color: #1f3cff !important; }
+.tech-sklearn { background: #eefbf1; color: #0f7a3a !important; }
+.tech-streamlit { background: #fff6d6; color: #8a5b00 !important; }
+.tech-pandas { background: #fdebf3; color: #9b1c5d !important; }
+
 
 </style>
 """, unsafe_allow_html=True)
@@ -397,26 +434,51 @@ def about():
     st.title("ℹ️ About Project")
 
     st.markdown("""
-    <div class="card about-card">
-        <h3>Employee Attrition Prediction System</h3>
-        <p>
-        This project uses Machine Learning to predict whether an employee
-        is likely to leave the organization.
-        </p>
+    <div class="about-wrapper">
+        <div class="about-card">
 
-        <ul>
-            <li>Single employee prediction</li>
-            <li>Batch prediction using CSV upload</li>
-            <li>Trained ML model with preprocessing</li>
-            <li>Deployed using Streamlit Cloud</li>
-        </ul>
+            <h3>🎯 Project Objective</h3>
+            <p>
+            To predict employee attrition using machine learning algorithms and
+            assist HR teams with data-driven, actionable recommendations for
+            improving employee retention rates.
+            </p>
 
-        <p>
-        This system helps HR teams take data-driven decisions
-        to reduce employee attrition.
-        </p>
+            <h3>🛠️ Technologies Used</h3>
+
+            <div class="tech-grid">
+                <div class="tech-box tech-python">
+                    🐍 <b>Python</b><br>
+                    Core programming language
+                </div>
+
+                <div class="tech-box tech-sklearn">
+                    🤖 <b>Scikit-learn</b><br>
+                    Machine learning framework
+                </div>
+
+                <div class="tech-box tech-streamlit">
+                    🌐 <b>Streamlit</b><br>
+                    Interactive web interface
+                </div>
+
+                <div class="tech-box tech-pandas">
+                    📊 <b>Pandas & NumPy</b><br>
+                    Data processing & analysis
+                </div>
+            </div>
+
+            <h3>🧠 Machine Learning Model</h3>
+            <p>
+            <b>Algorithm:</b> Logistic Regression / Random Forest<br>
+            <b>Accuracy:</b> 85%<br>
+            <b>Features:</b> Age, Income, Experience, Satisfaction Metrics, Overtime
+            </p>
+
+        </div>
     </div>
     """, unsafe_allow_html=True)
+
 
 
 # ---------------- MAIN APP ---------------- #
@@ -445,6 +507,7 @@ if st.session_state.logged_in:
     main()
 else:
     login_page()   
+
 
 
 
