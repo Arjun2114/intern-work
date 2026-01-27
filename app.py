@@ -163,6 +163,12 @@ header {visibility: hidden;}
     color: #0f7a3a !important;
 }
 
+/* ========== ABOUT PAGE FIX ========== */
+.about-card p,
+.about-card li,
+.about-card ul {
+    color: #1b1b1b !important;
+}
 
 </style>
 """, unsafe_allow_html=True)
@@ -391,7 +397,7 @@ def about():
     st.title("ℹ️ About Project")
 
     st.markdown("""
-    <div class="card">
+    <div class="card about-card">
         <h3>Employee Attrition Prediction System</h3>
         <p>
         This project uses Machine Learning to predict whether an employee
@@ -439,6 +445,7 @@ if st.session_state.logged_in:
     main()
 else:
     login_page()   
+
 
 
 
