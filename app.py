@@ -153,6 +153,11 @@ header {visibility: hidden;}
     color: #1f3cff !important;
 }
 
+.center-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
 .feature-green {
     background: #eefbf1;
     color: #0f7a3a !important;
@@ -317,19 +322,27 @@ def single_prediction():
 
 
     if st.button("Predict"):
-        # Ensure exact column order
-        input_df = input_df[feature_columns]
+        # Convert to numpy
+        X = input_df.values.astype(float)
     
-        # Convert to numpy array to bypass sklearn feature-name validation
-        scaled = scaler.transform(input_df.values)
+        # Force correct feature count for scaler
+        expected = scaler.n_features_in_
+    
+        if X.shape[1] > expected:
+            X = X[:, :expected]
+        elif X.shape[1] < expected:
+            pad_width = expected - X.shape[1]
+            X = np.pad(X, ((0, 0), (0, pad_width)), mode="constant")
+    
+        scaled = scaler.transform(X)
     
         pred = model.predict(scaled)[0]
         prob = model.predict_proba(scaled)[0][1]
-
-    if pred == 1:
-        st.error(f"⚠️ Likely to Leave ({prob:.2%})")
-    else:
-        st.success(f"✅ Likely to Stay ({1-prob:.2%})")
+    
+        if pred == 1:
+            st.error(f"⚠️ Likely to Leave ({prob:.2%})")
+        else:
+            st.success(f"✅ Likely to Stay ({1-prob:.2%})")
 
 # ---------------- BATCH PREDICTION ---------------- #
 def batch_prediction():
@@ -348,7 +361,17 @@ def batch_prediction():
             df_encoded = df_encoded.reindex(columns=feature_columns, fill_value=0)
 
             df_encoded = df_encoded[feature_columns]
-            scaled = scaler.transform(df_encoded.values)
+            X = df_encoded.values.astype(float)
+            expected = scaler.n_features_in_
+
+            if X.shape[1] > expected:
+                X = X[:, :expected]
+            elif X.shape[1] < expected:
+                pad_width = expected - X.shape[1]
+                X = np.pad(X, ((0, 0), (0, pad_width)), mode="constant")
+
+            scaled = scaler.transform(X)
+
             preds = model.predict(scaled)
             probs = model.predict_proba(scaled)[:,1]
 
@@ -417,4 +440,5 @@ if st.session_state.logged_in:
     main()
 else:
     login_page()   
+
 
