@@ -431,50 +431,51 @@ def about():
     st.title("ℹ️ About Project")
 
     st.markdown("""
-    <div class="about-wrapper">
-        <div class="about-card">
-    
-            <h3>🎯 Project Objective</h3>
-            <p>
-            To predict employee attrition using machine learning algorithms and
-            assist HR teams with data-driven, actionable recommendations for
-            improving employee retention rates.
-            </p>
-    
-            <h3>🛠️ Technologies Used</h3>
-    
-            <div class="tech-grid">
-                <div class="tech-box tech-python">
-                    🐍 <b>Python</b><br>
-                    Core programming language
-                </div>
-    
-                <div class="tech-box tech-sklearn">
-                    🤖 <b>Scikit-learn</b><br>
-                    Machine learning framework
-                </div>
-    
-                <div class="tech-box tech-streamlit">
-                    🌐 <b>Streamlit</b><br>
-                    Interactive web interface
-                </div>
-    
-                <div class="tech-box tech-pandas">
-                    📊 <b>Pandas & NumPy</b><br>
-                    Data processing & analysis
-                </div>
+<div class="about-wrapper">
+    <div class="about-card">
+
+        <h3>🎯 Project Objective</h3>
+        <p>
+        To predict employee attrition using machine learning algorithms and
+        assist HR teams with data-driven, actionable recommendations for
+        improving employee retention rates.
+        </p>
+
+        <h3>🛠️ Technologies Used</h3>
+
+        <div class="tech-grid">
+            <div class="tech-box tech-python">
+                🐍 <b>Python</b><br>
+                Core programming language
             </div>
-    
-            <h3>🧠 Machine Learning Model</h3>
-            <p>
-            <b>Algorithm:</b> Logistic Regression / Random Forest<br>
-            <b>Accuracy:</b> 85%<br>
-            <b>Features:</b> Age, Income, Experience, Satisfaction Metrics, Overtime
-            </p>
-    
+
+            <div class="tech-box tech-sklearn">
+                🤖 <b>Scikit-learn</b><br>
+                Machine learning framework
+            </div>
+
+            <div class="tech-box tech-streamlit">
+                🌐 <b>Streamlit</b><br>
+                Interactive web interface
+            </div>
+
+            <div class="tech-box tech-pandas">
+                📊 <b>Pandas & NumPy</b><br>
+                Data processing & analysis
+            </div>
         </div>
+
+        <h3>🧠 Machine Learning Model</h3>
+        <p>
+        <b>Algorithm:</b> Logistic Regression / Random Forest<br>
+        <b>Accuracy:</b> 85%<br>
+        <b>Features:</b> Age, Income, Experience, Satisfaction Metrics, Overtime
+        </p>
+
     </div>
-    """, unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)
+
 
 
 # ---------------- MAIN APP ---------------- #
@@ -503,6 +504,7 @@ if st.session_state.logged_in:
     main()
 else:
     login_page()   
+
 
 
 
