@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 import joblib
 import os
+import streamlit.components.v1 as components
+
 
 # ---------------- PAGE CONFIG ---------------- #
 st.set_page_config(
@@ -430,7 +432,8 @@ def batch_prediction():
 def about():
     st.title("ℹ️ About Project")
 
-    st.markdown("""
+    components.html(
+        """
 <div class="about-wrapper">
     <div class="about-card">
 
@@ -474,8 +477,9 @@ def about():
 
     </div>
 </div>
-""", unsafe_allow_html=True)
-
+        """,
+        height=650,
+    )
 
 
 # ---------------- MAIN APP ---------------- #
@@ -504,6 +508,7 @@ if st.session_state.logged_in:
     main()
 else:
     login_page()   
+
 
 
 
