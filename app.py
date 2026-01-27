@@ -317,14 +317,14 @@ def single_prediction():
 
 
     if st.button("Predict"):
-    # Ensure exact column order
-    input_df = input_df[feature_columns]
-
-    # Convert to numpy array to bypass sklearn feature-name validation
-    scaled = scaler.transform(input_df.values)
-
-    pred = model.predict(scaled)[0]
-    prob = model.predict_proba(scaled)[0][1]
+        # Ensure exact column order
+        input_df = input_df[feature_columns]
+    
+        # Convert to numpy array to bypass sklearn feature-name validation
+        scaled = scaler.transform(input_df.values)
+    
+        pred = model.predict(scaled)[0]
+        prob = model.predict_proba(scaled)[0][1]
 
     if pred == 1:
         st.error(f"⚠️ Likely to Leave ({prob:.2%})")
@@ -417,3 +417,4 @@ if st.session_state.logged_in:
     main()
 else:
     login_page()   
+
