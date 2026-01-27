@@ -317,14 +317,19 @@ def single_prediction():
 
 
     if st.button("Predict"):
-        scaled = scaler.transform(input_df)
-        pred = model.predict(scaled)[0]
-        prob = model.predict_proba(scaled)[0][1]
+    # Ensure exact column order
+    input_df = input_df[feature_columns]
 
-        if pred == 1:
-            st.error(f"⚠️ Likely to Leave ({prob:.2%})")
-        else:
-            st.success(f"✅ Likely to Stay ({1-prob:.2%})")
+    # Convert to numpy array to bypass sklearn feature-name validation
+    scaled = scaler.transform(input_df.values)
+
+    pred = model.predict(scaled)[0]
+    prob = model.predict_proba(scaled)[0][1]
+
+    if pred == 1:
+        st.error(f"⚠️ Likely to Leave ({prob:.2%})")
+    else:
+        st.success(f"✅ Likely to Stay ({1-prob:.2%})")
 
 # ---------------- BATCH PREDICTION ---------------- #
 def batch_prediction():
@@ -342,7 +347,8 @@ def batch_prediction():
             df_encoded = pd.get_dummies(df)
             df_encoded = df_encoded.reindex(columns=feature_columns, fill_value=0)
 
-            scaled = scaler.transform(df_encoded)
+            df_encoded = df_encoded[feature_columns]
+            scaled = scaler.transform(df_encoded.values)
             preds = model.predict(scaled)
             probs = model.predict_proba(scaled)[:,1]
 
@@ -410,13 +416,4 @@ def main():
 if st.session_state.logged_in:
     main()
 else:
-    login_page()
-
-
-
-
-
-
-
-
-
+    login_page()   
