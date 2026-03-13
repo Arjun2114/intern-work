@@ -76,8 +76,8 @@ h1 {
 
 
 # ---------------- LOAD MODEL ---------------- #
-model = joblib.load("student_model.joblib")
-scaler = joblib.load("scaler.joblib")
+model = joblib.load("models/student_model.joblib")
+scaler = joblib.load("models/scaler.joblib")
 
 # ---------------- LOGIN USERS ---------------- #
 USERS = {
@@ -492,4 +492,5 @@ def main_app():
 if st.session_state.logged_in:
     main_app()
 else:
+
     login_page()
