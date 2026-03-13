@@ -3,6 +3,5 @@ numpy
 pandas
 scikit-learn
 joblib
-
-
-
+seaborn
+matplotlib
