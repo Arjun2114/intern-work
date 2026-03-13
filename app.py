@@ -428,6 +428,8 @@ def batch_prediction():
         except Exception as e:
             st.error("Invalid file format")
 
+
+
 # ---------------- ABOUT ---------------- #
 def about():
     st.title("ℹ️ About Project")
@@ -560,6 +562,7 @@ if st.session_state.logged_in:
     main()
 else:
     login_page()   
+
 
 
 
