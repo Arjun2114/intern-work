@@ -1,14 +1,13 @@
 import streamlit as st
 import numpy as np
-import pandas as pd
 import joblib
-import os
+from textwrap import dedent
 import streamlit.components.v1 as components
 
 
 # ---------------- PAGE CONFIG ---------------- #
 st.set_page_config(
-    page_title="Employee Attrition Prediction System",
+    page_title="Employee Attrition System",
     page_icon="📊",
     layout="centered"
 )
@@ -17,558 +16,480 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* ========== GLOBAL RESET ========== */
-* {
-    font-family: inherit;
+/* Page background */
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-/* ========== APP BACKGROUND ========== */
-.stApp {
-    background: linear-gradient(135deg, #0f0f1a 0%, #0b0b12 100%);
-}
-
-/* ========== MAIN AREA ========== */
-.main > div {
+/* Main content area */
+section[data-testid="stMain"] {
     background: transparent;
-    color: inherit;
 }
 
-/* ========== SIDEBAR ========== */
-[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #6a7be7 0%, #7a56b6 100%);
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
 }
-[data-testid="stSidebar"] * {
+
+/* Sidebar text */
+section[data-testid="stSidebar"] * {
     color: white !important;
 }
 
-/* ========== HEADINGS (LOCKED) ========== */
-h1, h2, h3, h4 {
-    color: #7d8cff !important;
-    font-weight: 700;
-}
-
-/* ========== NORMAL TEXT (LOCKED) ========== */
-p, span, label, li {
-    color: #e6e6f0 !important;
-}
-
-/* ========== INPUT LABELS ========== */
-label {
-    color: #dcdcff !important;
-    font-weight: 500;
-}
-
-/* ========== INPUT FIELDS ========== */
-input, textarea, select {
-    background-color: #1f1f2e !important;
-    color: #ffffff !important;
-    border-radius: 10px !important;
-    border: 1px solid #3b3b5c !important;
-}
-
-/* ========== BUTTONS ========== */
-.stButton > button {
-    background: linear-gradient(135deg, #6a7be7 0%, #7a56b6 100%) !important;
+/* Buttons */
+button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
     color: white !important;
-    border-radius: 10px !important;
+    border-radius: 8px !important;
     border: none !important;
     font-weight: 600 !important;
-    padding: 0.6rem 1.2rem !important;
 }
 
-
-/* ========== CARD DESIGN (LOCKED) ========== */
-.card {
-    background: white;
-    color: #1b1b1b !important;
-    padding: 1.5rem;
-    border-radius: 16px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-    margin-bottom: 1.2rem;
+/* Metrics */
+div[data-testid="stMetricValue"] {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #667eea;
 }
 
-.card * {
-    color: #1b1b1b !important;
+/* Inputs */
+input, select, textarea {
+    border-radius: 8px !important;
+    border: 2px solid #e2e8f0 !important;
 }
 
-/* ========== DASHBOARD GRADIENT METRIC CARDS ========== */
-.metric-purple {
-    background: linear-gradient(135deg, #6f7ee8, #7b5fcf);
+/* Alerts */
+div[data-testid="stAlert"] {
+    border-radius: 8px;
 }
 
-.metric-pink {
-    background: linear-gradient(135deg, #ff9ad5, #ff5e86);
+/* Titles */
+h1 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
 }
-
-.metric-blue {
-    background: linear-gradient(135deg, #4cc3ff, #2ad4ff);
-}
-
-.metric-card h3 {
-    color: white !important;
-    margin-bottom: 0.5rem;
-}
-
-.metric-card h1 {
-    color: white !important;
-    font-size: 42px;
-}
-
-
-/* ========== DROPDOWNS FIX ========== */
-[data-baseweb="select"] * {
-    color: white !important;
-}
-
-/* ========== REMOVE STREAMLIT WATERMARK SPACING ========== */
-footer {visibility: hidden;}
-header {visibility: hidden;}
-
-/* ========== SYSTEM OVERVIEW CARD ========== */
-.system-card {
-    background: white;
-    border-radius: 20px;
-    padding: 2rem;
-    margin-top: 3rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-}
-
-.system-card h2 {
-    color: #1f2a44 !important;
-    margin-bottom: 1rem;
-}
-
-.system-card p {
-    color: #5f6c8a !important;
-    font-size: 16px;
-}
-
-.feature-box {
-    border-radius: 14px;
-    padding: 1rem;
-    margin-top: 1rem;
-    font-weight: 500;
-}
-
-.feature-blue {
-    background: #eef4ff;
-    color: #1f3cff !important;
-}
-
-.center-wrapper {
-    max-width: 1100px;
-    margin: 0 auto;
-}
-
-.feature-green {
-    background: #eefbf1;
-    color: #0f7a3a !important;
-}
-
-/* ========== ABOUT PAGE STYLES ========== */
-.about-wrapper {
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-.about-card {
-    background: white;
-    border-radius: 20px;
-    padding: 2.5rem;
-    box-shadow: 0 12px 35px rgba(0,0,0,0.25);
-}
-
-.about-card h3 {
-    color: #1f2a44 !important;
-    margin-top: 1.5rem;
-}
-
-.about-card p,
-.about-card li {
-    color: #4b5568 !important;
-    font-size: 16px;
-    line-height: 1.6;
-}
-
-.tech-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.tech-box {
-    border-radius: 14px;
-    padding: 1.2rem;
-    font-weight: 500;
-}
-
-.tech-python { background: #eef4ff; color: #1f3cff !important; }
-.tech-sklearn { background: #eefbf1; color: #0f7a3a !important; }
-.tech-streamlit { background: #fff6d6; color: #8a5b00 !important; }
-.tech-pandas { background: #fdebf3; color: #9b1c5d !important; }
-
 
 </style>
 """, unsafe_allow_html=True)
 
 
 # ---------------- LOAD MODEL ---------------- #
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+model = joblib.load("student_model.joblib")
+scaler = joblib.load("scaler.joblib")
 
-model = joblib.load(os.path.join(BASE_DIR, "models", "student_model.joblib"))
-scaler = joblib.load(os.path.join(BASE_DIR, "models", "scaler.joblib"))
-feature_columns = joblib.load(os.path.join(BASE_DIR, "models", "model_features.joblib"))
-
-# ---------------- USERS ---------------- #
+# ---------------- LOGIN USERS ---------------- #
 USERS = {
     "admin": "admin123",
     "hr": "hr123"
 }
 
+# ---------------- SESSION STATE ---------------- #
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
 # ---------------- LOGIN PAGE ---------------- #
 def login_page():
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1,2,1])
+    col1, col2, col3 = st.columns([1, 2, 1])
+    
     with col2:
+        st.markdown("<br><br>", unsafe_allow_html=True)
         st.markdown("""
-        <div class="card" style="text-align:center">
-            <h1>🔐</h1>
-            <h2>Login</h2>
-            <p>Employee Attrition Prediction System</p>
-        </div>
+            <div style='text-align: center; padding: 2rem; background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);'>
+                <h1 style='font-size: 3rem; margin-bottom: 0.5rem;'>🔐</h1>
+                <h2 style='color: #667eea; margin-bottom: 0.5rem;'>Welcome Back</h2>
+                <p style='color: #64748b; margin-bottom: 2rem;'>Employee Attrition Prediction System</p>
+            </div>
         """, unsafe_allow_html=True)
+        
+        st.markdown("<br>", unsafe_allow_html=True)
 
-        user = st.text_input("Username")
-        pwd = st.text_input("Password", type="password")
+        username = st.text_input("👤 Username", placeholder="Enter your username")
+        password = st.text_input("🔒 Password", type="password", placeholder="Enter your password")
+        
+        st.markdown("<br>", unsafe_allow_html=True)
 
-        if st.button("Login"):
-            if user in USERS and USERS[user] == pwd:
+        if st.button("🚀 Login"):
+            if username in USERS and USERS[username] == password:
                 st.session_state.logged_in = True
-                st.session_state.user = user
-                st.success("Login successful")
+                st.session_state.user = username
+                st.success("✅ Login successful! Redirecting...")
                 st.rerun()
             else:
-                st.error("Invalid credentials")
+                st.error("❌ Invalid username or password")
+        
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("""
+            <div style='text-align: center; padding: 1rem; background: #f8fafc; border-radius: 8px;'>
+                <p style='color: #64748b; font-size: 0.875rem; margin: 0;'>
+                    <strong>Demo Credentials:</strong><br>
+                    admin / admin123 | hr / hr123
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
 
 # ---------------- DASHBOARD ---------------- #
 def dashboard():
-    st.markdown(
-        "<h1 style='color:#7d8cff; font-weight:700;'>⬜ HR Analytics Dashboard</h1>",
-        unsafe_allow_html=True
-    )
-
+    st.title("📊 HR Analytics Dashboard")
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # ---------- METRIC CARDS ----------
     col1, col2, col3 = st.columns(3)
-
+    
     with col1:
         st.markdown("""
-        <div class="metric-card metric-purple">
-            <h3>Total Employees</h3>
-            <h1>1470</h1>
+            <div style='
+            background: linear-gradient(135deg, #a5b4fc 0%, #818cf8 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            color: #1e1b4b;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        '>
+            <h3 style='font-size: 1rem; margin: 0;'>Total Employees</h3>
+            <h1 style='font-size: 2.8rem; margin: 0.5rem 0; font-weight: 800;'>1,470</h1>
         </div>
         """, unsafe_allow_html=True)
-
+    
     with col2:
         st.markdown("""
-        <div class="metric-card metric-pink">
-            <h3>Attrition Rate</h3>
-            <h1>16%</h1>
-        </div>
+            <div style='background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); 
+                        padding: 1.5rem; border-radius: 12px; text-align: center; color: white;'>
+                <h3 style='color: white; font-size: 1rem; margin: 0;'>Attrition Rate</h3>
+                <h1 style='color: white; font-size: 2.5rem; margin: 0.5rem 0;'>16%</h1>
+            </div>
         """, unsafe_allow_html=True)
-
+    
     with col3:
         st.markdown("""
-        <div class="metric-card metric-blue">
-            <h3>Model Accuracy</h3>
-            <h1>85%</h1>
-        </div>
+            <div style='background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); 
+                        padding: 1.5rem; border-radius: 12px; text-align: center; color: white;'>
+                <h3 style='color: white; font-size: 1rem; margin: 0;'>Model Accuracy</h3>
+                <h1 style='color: white; font-size: 2.5rem; margin: 0.5rem 0;'>85%</h1>
+            </div>
         """, unsafe_allow_html=True)
 
     st.markdown("<br><br>", unsafe_allow_html=True)
 
-    # ---------- SYSTEM OVERVIEW ----------
     st.markdown("""
-    <div class="center-wrapper">
-        <div class="system-card">
-            <h2>📌 System Overview</h2>
-            <p>
-            This intelligent dashboard provides comprehensive employee attrition
-            analytics powered by machine learning. The system evaluates multiple
-            workforce factors to predict resignation risk and generate actionable
-            HR insights.
+        <div style='background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);'>
+            <h2 style='color: #2d3748; margin-bottom: 1rem;'>📌 System Overview</h2>
+            <p style='color: #4a5568; line-height: 1.8; font-size: 1.05rem;'>
+                This intelligent dashboard provides comprehensive employee attrition analytics powered by 
+                machine learning. The system analyzes multiple factors to predict employee resignation risk 
+                and delivers actionable HR recommendations to improve retention rates.
             </p>
+            <br>
+            <div style='display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;'>
+                <div style='background: #f0f9ff; padding: 1rem; border-radius: 8px; border-left: 4px solid #3b82f6;'>
+                    <strong style='color: #1e40af;'>🎯 Predictive Analytics</strong>
+                    <p style='color: #475569; margin: 0.5rem 0 0 0;'>ML-powered attrition forecasting</p>
+                </div>
+                <div style='background: #f0fdf4; padding: 1rem; border-radius: 8px; border-left: 4px solid #22c55e;'>
+                    <strong style='color: #166534;'>💡 Smart Recommendations</strong>
+                    <p style='color: #475569; margin: 0.5rem 0 0 0;'>Actionable HR insights</p>
+                </div>
+                <div style='background: #fef3c7; padding: 1rem; border-radius: 8px; border-left: 4px solid #f59e0b;'>
+                    <strong style='color: #92400e;'>📊 Risk Analysis</strong>
+                    <p style='color: #475569; margin: 0.5rem 0 0 0;'>Identify retention factors</p>
+                </div>
+                <div style='background: #fce7f3; padding: 1rem; border-radius: 8px; border-left: 4px solid #ec4899;'>
+                    <strong style='color: #9f1239;'>⚡ Real-time Insights</strong>
+                    <p style='color: #475569; margin: 0.5rem 0 0 0;'>Instant prediction results</p>
+                </div>
+            </div>
         </div>
-    </div>
     """, unsafe_allow_html=True)
 
-    # ---------- FEATURE BOXES (RENDER SEPARATELY) ----------
-    colA, colB = st.columns(2)
+# ---------------- PREDICTION PAGE ---------------- #
+def prediction_page():
+    st.title("🔮 Employee Attrition Prediction")
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    with colA:
-        st.markdown("""
-        <div class="feature-box feature-blue">
-            🎯 <b>Predictive Analytics</b><br>
-            ML-powered employee attrition forecasting
+    st.markdown("""
+        <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                    padding: 1.5rem; border-radius: 12px; color: white; margin-bottom: 2rem;'>
+            <h3 style='color: white; margin: 0 0 0.5rem 0;'>📋 Employee Information</h3>
+            <p style='color: rgba(255,255,255,0.9); margin: 0;'>
+                Enter employee details below to predict attrition risk and receive HR recommendations
+            </p>
         </div>
-        """, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
-    with colB:
-        st.markdown("""
-        <div class="feature-box feature-green">
-            💡 <b>Smart Recommendations</b><br>
-            Actionable HR strategies for retention improvement
-        </div>
-        """, unsafe_allow_html=True)
-
-
-# ---------------- SINGLE PREDICTION ---------------- #
-def single_prediction():
-    st.title("🔮 Single Employee Prediction")
-
-    age = st.number_input("Age", 18, 60, 30)
-    income = st.number_input("Monthly Income", 1000, 200000, 50000)
-    years = st.number_input("Years at Company", 0, 40, 3)
-    job_sat = st.selectbox("Job Satisfaction", [1,2,3,4])
-    wlb = st.selectbox("Work Life Balance", [1,2,3,4])
-    env_sat = st.selectbox("Environment Satisfaction", [1,2,3,4])
-    overtime = st.selectbox("OverTime", ["No", "Yes"])
-    overtime = 1 if overtime == "Yes" else 0
-
-    # Create input with exact feature structure
-    input_dict = {
-        "Age": age,
-        "MonthlyIncome": income,
-        "YearsAtCompany": years,
-        "JobSatisfaction": job_sat,
-        "WorkLifeBalance": wlb,
-        "EnvironmentSatisfaction": env_sat,
-        "OverTime": overtime
-    }
-
-    # Create empty dataframe with all model features
-    input_df = pd.DataFrame(columns=feature_columns)
-
-    # Fill known values
-    for key, value in input_dict.items():
-        if key in input_df.columns:
-            input_df.loc[0, key] = value
+    col1, col2 = st.columns(2)
     
-    # Fill remaining NaNs with 0
-    input_df = input_df.fillna(0)
+    with col1:
+        st.markdown("#### 👤 Personal Details")
+        age = st.number_input("Age", 18, 60, 30, help="Employee's age")
+        monthly_income = st.number_input("Monthly Income ($)", 1000, 200000, 50000, step=1000, 
+                                        help="Current monthly salary")
+    
+    with col2:
+        st.markdown("#### 💼 Work Experience")
+        total_working_years = st.number_input("Total Working Years", 0, 40, 5, 
+                                             help="Total years of professional experience")
+        years_at_company = st.number_input("Years at Company", 0, 40, 3, 
+                                          help="Years spent at current company")
 
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("#### 📊 Satisfaction Metrics")
+    
+    col3, col4, col5 = st.columns(3)
+    
+    with col3:
+        job_satisfaction = st.selectbox("Job Satisfaction", [1, 2, 3, 4], 
+                                       index=2,
+                                       help="1 = Low, 4 = High")
+    
+    with col4:
+        work_life_balance = st.selectbox("Work Life Balance", [1, 2, 3, 4], 
+                                        index=2,
+                                        help="1 = Bad, 4 = Excellent")
+    
+    with col5:
+        environment_satisfaction = st.selectbox("Environment Satisfaction", [1, 2, 3, 4], 
+                                               index=2,
+                                               help="1 = Low, 4 = High")
 
-    if st.button("Predict"):
-        # Convert to numpy
-        X = input_df.values.astype(float)
-    
-        # Force correct feature count for scaler
-        expected = scaler.n_features_in_
-    
-        if X.shape[1] > expected:
-            X = X[:, :expected]
-        elif X.shape[1] < expected:
-            pad_width = expected - X.shape[1]
-            X = np.pad(X, ((0, 0), (0, pad_width)), mode="constant")
-    
-        scaled = scaler.transform(X)
-    
-        prob = model.predict_proba(scaled)[0][1]
+    st.markdown("<br>", unsafe_allow_html=True)
+    overtime = st.selectbox("⏰ OverTime Work", ["No", "Yes"], 
+                           help="Does the employee work overtime?")
+    overtime_val = 1 if overtime == "Yes" else 0
 
-        if prob >= 0.7:
-            st.error(f"⚠️ Likely to Leave ({prob:.2%})")
+    input_data = np.array([[
+        age,
+        monthly_income,
+        total_working_years,
+        years_at_company,
+        job_satisfaction,
+        work_life_balance,
+        environment_satisfaction,
+        overtime_val
+    ]])
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    if st.button("🔍 Predict Attrition Risk"):
+        with st.spinner("Analyzing employee data..."):
+            scaled = scaler.transform(input_data)
+            prediction = model.predict(scaled)[0]
+            probability = model.predict_proba(scaled)[0][1]
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        if prediction == 1:
+            st.markdown(f"""
+                <div style='background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); 
+                            padding: 2rem; border-radius: 12px; border-left: 6px solid #ef4444;
+                            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);'>
+                    <h2 style='color: #991b1b; margin: 0 0 0.5rem 0;'>⚠️ High Attrition Risk</h2>
+                    <p style='color: #7f1d1d; font-size: 1.1rem; margin: 0;'>
+                        Employee is likely to leave with <strong>{probability:.1%}</strong> probability
+                    </p>
+                </div>
+            """, unsafe_allow_html=True)
         else:
-            st.success(f"✅ Likely to Stay ({1-prob:.2%})")
+            st.markdown(f"""
+                <div style='background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); 
+                            padding: 2rem; border-radius: 12px; border-left: 6px solid #22c55e;
+                            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);'>
+                    <h2 style='color: #14532d; margin: 0 0 0.5rem 0;'>✅ Low Attrition Risk</h2>
+                    <p style='color: #166534; font-size: 1.1rem; margin: 0;'>
+                        Employee is likely to stay with <strong>{(1-probability):.1%}</strong> probability
+                    </p>
+                </div>
+            """, unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        st.markdown("### 🔍 Identified Risk Factors")
+
+        risks = []
+        suggestions = []
+
+        if job_satisfaction <= 2:
+            risks.append(("Low Job Satisfaction", "😞"))
+            suggestions.append("Improve role clarity, recognition programs, and growth opportunities")
+
+        if work_life_balance <= 2:
+            risks.append(("Poor Work-Life Balance", "⚖️"))
+            suggestions.append("Introduce flexible working hours or redistribute workload")
+
+        if overtime_val == 1:
+            risks.append(("Frequent Overtime", "⏰"))
+            suggestions.append("Reduce overtime by reallocating tasks or adding resources")
+
+        if monthly_income < 30000:
+            risks.append(("Below Market Salary", "💰"))
+            suggestions.append("Review salary structure and provide competitive compensation")
+
+        if total_working_years < 3:
+            risks.append(("Limited Work Experience", "📚"))
+            suggestions.append("Provide mentorship and structured training programs")
+
+        if risks:
+            for risk, emoji in risks:
+                st.markdown(f"""
+                    <div style='background: #fffbeb; padding: 1rem; border-radius: 8px; 
+                                border-left: 4px solid #f59e0b; margin: 0.5rem 0;'>
+                        <strong style='color: #92400e;'>{emoji} {risk}</strong>
+                    </div>
+                """, unsafe_allow_html=True)
+        else:
+            st.markdown("""
+                <div style='background: #f0fdf4; padding: 1rem; border-radius: 8px; 
+                            border-left: 4px solid #22c55e;'>
+                    <strong style='color: #166534;'>✨ No major attrition risk factors identified</strong>
+                </div>
+            """, unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("### 💡 HR Action Items")
+
+        if suggestions:
+            for i, suggestion in enumerate(suggestions, 1):
+                st.markdown(f"""
+                    <div style='background: #eff6ff; padding: 1rem; border-radius: 8px; 
+                                border-left: 4px solid #3b82f6; margin: 0.5rem 0;'>
+                        <strong style='color: #1e40af;'>Action {i}:</strong> 
+                        <span style='color: #1e3a8a;'>{suggestion}</span>
+                    </div>
+                """, unsafe_allow_html=True)
+        else:
+            st.markdown("""
+                <div style='background: #f0fdf4; padding: 1rem; border-radius: 8px; 
+                            border-left: 4px solid #22c55e;'>
+                    <strong style='color: #166534;'>✓ No immediate HR action required for this employee</strong>
+                </div>
+            """, unsafe_allow_html=True)
 
 
-# ---------------- BATCH PREDICTION ---------------- #
-def batch_prediction():
-    st.title("📂 Batch Employee Prediction")
+def data_insights_page():
 
-    st.info("Upload CSV file with employee details")
+    import pandas as pd
+    import seaborn as sns
+    import matplotlib.pyplot as plt
 
-    file = st.file_uploader("Upload CSV", type=["csv"])
+    st.title("📊 Employee Data Insights")
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    if file:
-        df = pd.read_csv(file)
-        st.dataframe(df.head())
+    df = pd.read_csv("WA_Fn-UseC_-HR-Employee-Attrition.csv")
 
-        try:
-            df_encoded = pd.get_dummies(df)
-            df_encoded = df_encoded.reindex(columns=feature_columns, fill_value=0)
+    st.subheader("Attrition Distribution")
 
-            df_encoded = df_encoded[feature_columns]
-            X = df_encoded.values.astype(float)
-            expected = scaler.n_features_in_
+    fig1, ax1 = plt.subplots()
+    sns.countplot(x="Attrition", data=df, ax=ax1)
+    st.pyplot(fig1)
 
-            if X.shape[1] > expected:
-                X = X[:, :expected]
-            elif X.shape[1] < expected:
-                pad_width = expected - X.shape[1]
-                X = np.pad(X, ((0, 0), (0, pad_width)), mode="constant")
+    st.subheader("Attrition by Department")
 
-            scaled = scaler.transform(X)
+    fig2, ax2 = plt.subplots()
+    sns.countplot(x="Department", hue="Attrition", data=df, ax=ax2)
+    plt.xticks(rotation=45)
+    st.pyplot(fig2)
 
-            probs = model.predict_proba(scaled)[:,1]
+    st.subheader("Age Distribution")
 
-            df["Attrition_Prediction"] = np.where(probs >= 0.7, "Likely to Leave", "Likely to Stay")
-            df["Attrition_Probability"] = probs
+    fig3, ax3 = plt.subplots()
+    sns.histplot(df["Age"], bins=20, kde=True, ax=ax3)
+    st.pyplot(fig3)
 
-            st.subheader("Results")
-            st.dataframe(df)
+    st.subheader("Salary Distribution")
 
-            csv = df.to_csv(index=False).encode("utf-8")
-            st.download_button("Download Results", csv, "attrition_results.csv")
+    fig4, ax4 = plt.subplots()
+    sns.histplot(df["MonthlyIncome"], bins=20, kde=True, ax=ax4)
+    st.pyplot(fig4)
 
-        except Exception as e:
-            st.error("Invalid file format")
-
-
-
-# ---------------- ABOUT ---------------- #
-def about():
-    st.title("ℹ️ About Project")
+# ---------------- ABOUT PAGE ---------------- #
+def about_page():
+    st.title("ℹ️ About the Project")
+    st.markdown("<br>", unsafe_allow_html=True)
 
     components.html(
         """
-<style>
-body {
-    background: transparent;
-    font-family: Arial, sans-serif;
-}
+        <div style="background: white; padding: 2rem; border-radius: 12px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                    max-width: 900px; margin: auto;">
 
-.about-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-top: 30px;
-}
+            <h3 style="color: #2d3748;">🎯 Project Objective</h3>
+            <p style="color: #4a5568; line-height: 1.8;">
+                To predict employee attrition using machine learning algorithms and assist
+                HR teams with data-driven, actionable recommendations for improving employee
+                retention rates.
+            </p>
 
-.about-card {
-    background: white;
-    border-radius: 20px;
-    padding: 40px;
-    max-width: 900px;
-    width: 100%;
-    box-shadow: 0 12px 35px rgba(0,0,0,0.25);
-}
+            <h3 style="color: #2d3748; margin-top: 1.5rem;">🛠️ Technologies Used</h3>
 
-.about-card h3 {
-    color: #1f2a44;
-    margin-top: 25px;
-}
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px;">
+                    <strong style="color: #1e40af;">🐍 Python</strong>
+                    <p style="color: #64748b;">Core programming language</p>
+                </div>
 
-.about-card p {
-    color: #4b5568;
-    font-size: 16px;
-    line-height: 1.6;
-}
+                <div style="background: #f0fdf4; padding: 1rem; border-radius: 8px;">
+                    <strong style="color: #166534;">🤖 Scikit-learn</strong>
+                    <p style="color: #64748b;">Machine learning framework</p>
+                </div>
 
-.tech-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    margin-top: 15px;
-}
+                <div style="background: #fef3c7; padding: 1rem; border-radius: 8px;">
+                    <strong style="color: #92400e;">🎨 Streamlit</strong>
+                    <p style="color: #64748b;">Interactive web interface</p>
+                </div>
 
-.tech-box {
-    border-radius: 14px;
-    padding: 18px;
-    font-weight: 500;
-    font-size: 15px;
-}
-
-.tech-python { background: #eef4ff; color: #1f3cff; }
-.tech-sklearn { background: #eefbf1; color: #0f7a3a; }
-.tech-streamlit { background: #fff6d6; color: #8a5b00; }
-.tech-pandas { background: #fdebf3; color: #9b1c5d; }
-</style>
-
-<div class="about-wrapper">
-    <div class="about-card">
-
-        <h3>🎯 Project Objective</h3>
-        <p>
-        To predict employee attrition using machine learning algorithms and
-        assist HR teams with data-driven, actionable recommendations for
-        improving employee retention rates.
-        </p>
-
-        <h3>🛠️ Technologies Used</h3>
-
-        <div class="tech-grid">
-            <div class="tech-box tech-python">
-                🐍 <b>Python</b><br>
-                Core programming language
+                <div style="background: #fce7f3; padding: 1rem; border-radius: 8px;">
+                    <strong style="color: #9f1239;">📊 Pandas & NumPy</strong>
+                    <p style="color: #64748b;">Data processing & analysis</p>
+                </div>
             </div>
 
-            <div class="tech-box tech-sklearn">
-                🤖 <b>Scikit-learn</b><br>
-                Machine learning framework
-            </div>
+            <h3 style="color: #2d3748; margin-top: 1.5rem;">🧠 Machine Learning Model</h3>
+            <p style="color: #4a5568;">
+                <strong>Algorithm:</strong> Logistic Regression / Random Forest<br>
+                <strong>Accuracy:</strong> 85%<br>
+                <strong>Features:</strong> Age, Income, Experience, Satisfaction Metrics, Overtime
+            </p>
 
-            <div class="tech-box tech-streamlit">
-                🌐 <b>Streamlit</b><br>
-                Interactive web interface
-            </div>
-
-            <div class="tech-box tech-pandas">
-                📊 <b>Pandas & NumPy</b><br>
-                Data processing & analysis
-            </div>
         </div>
-
-        <h3>🧠 Machine Learning Model</h3>
-        <p>
-        <b>Algorithm:</b> Logistic Regression / Random Forest<br>
-        <b>Accuracy:</b> 85%<br>
-        <b>Features:</b> Age, Income, Experience, Satisfaction Metrics, Overtime
-        </p>
-
-    </div>
-</div>
         """,
-        height=700,
+        height=650,
+        scrolling=False
     )
+
 
 
 # ---------------- MAIN APP ---------------- #
-def main():
-    st.sidebar.markdown(f"👤 Logged in as **{st.session_state.user}**")
+def main_app():
+    st.sidebar.markdown(f"""
+        <div style='background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px; 
+                    text-align: center; margin-bottom: 2rem;'>
+            <h3 style='color: white; margin: 0 0 0.5rem 0;'>👤 {st.session_state.user.upper()}</h3>
+            <p style='color: rgba(255,255,255,0.8); margin: 0; font-size: 0.875rem;'>System Administrator</p>
+        </div>
+    """, unsafe_allow_html=True)
+
     menu = st.sidebar.radio(
-        "Navigation",
-        ["Dashboard", "Single Prediction", "Batch Prediction", "About"]
+        "🧭 Navigation",
+        ["Dashboard", "Prediction", "Data Insights", "About"],
+        label_visibility="visible"
     )
 
-    if st.sidebar.button("Logout"):
+    st.sidebar.markdown("<br><br>", unsafe_allow_html=True)
+
+    if st.sidebar.button("🚪 Logout"):
         st.session_state.logged_in = False
         st.rerun()
 
     if menu == "Dashboard":
         dashboard()
-    elif menu == "Single Prediction":
-        single_prediction()
-    elif menu == "Batch Prediction":
-        batch_prediction()
+    elif menu == "Prediction":
+        prediction_page()
+    elif menu == "Data Insights":
+        data_insights_page()
     else:
-        about()
+        about_page()
 
 # ---------------- ROUTER ---------------- #
 if st.session_state.logged_in:
-    main()
+    main_app()
 else:
-    login_page()   
-
-
-
-
-
-
-
-
-
-
+    login_page()
