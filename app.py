@@ -373,7 +373,7 @@ def data_insights_page():
     st.title("📊 Employee Data Insights")
     st.markdown("<br>", unsafe_allow_html=True)
 
-    df = pd.read_csv("WA_Fn-UseC_-HR-Employee-Attrition.csv")
+    df = pd.read_csv("HR-Employee-Attrition.csv")
 
     st.subheader("Attrition Distribution")
 
@@ -494,3 +494,4 @@ if st.session_state.logged_in:
 else:
 
     login_page()
+
