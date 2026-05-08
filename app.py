@@ -545,7 +545,7 @@ def main_app():
 
     menu = st.sidebar.radio(
         "🧭 Navigation",
-        ["Dashboard", "Prediction", "Batch Prediciton", "Data Insights", "About"],
+        ["Dashboard", "Prediction", "Batch Prediction", "Data Insights", "About"],
         label_visibility="visible"
     )
 
