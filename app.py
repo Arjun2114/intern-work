@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 import numpy as np
 import joblib
 from textwrap import dedent
@@ -364,6 +365,81 @@ def prediction_page():
             """, unsafe_allow_html=True)
 
 
+# ---------------- BATCH PREDICTION PAGE ---------------- #
+def batch_prediction_page():
+
+    st.title("📂 Batch Employee Prediction")
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    st.markdown("""
+        <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    padding: 1.5rem; border-radius: 12px; color: white; margin-bottom: 2rem;'>
+            <h3 style='color: white; margin: 0 0 0.5rem 0;'>📤 Upload Employee Dataset</h3>
+            <p style='color: rgba(255,255,255,0.9); margin: 0;'>
+                Upload a CSV file containing multiple employee records for bulk attrition prediction
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    uploaded_file = st.file_uploader(
+        "Upload CSV File",
+        type=["csv"]
+    )
+
+    if uploaded_file is not None:
+
+        try:
+            df = pd.read_csv(uploaded_file)
+
+            st.subheader("📄 Uploaded Dataset")
+            st.dataframe(df.head())
+
+            # Encode categorical columns
+            df_encoded = pd.get_dummies(df)
+
+            # Match training features
+            feature_columns = joblib.load("models/model_features.joblib")
+
+            df_encoded = df_encoded.reindex(
+                columns=feature_columns,
+                fill_value=0
+            )
+
+            # Scale data
+            scaled_data = scaler.transform(df_encoded)
+
+            # Predictions
+            predictions = model.predict(scaled_data)
+            probabilities = model.predict_proba(scaled_data)[:, 1]
+
+            # Add results
+            df["Prediction"] = np.where(
+                predictions == 1,
+                "Likely to Leave",
+                "Likely to Stay"
+            )
+
+            df["Attrition Probability"] = probabilities.round(2)
+
+            st.markdown("<br>", unsafe_allow_html=True)
+
+            st.subheader("✅ Prediction Results")
+            st.dataframe(df)
+
+            # Download results
+            csv = df.to_csv(index=False).encode("utf-8")
+
+            st.download_button(
+                "📥 Download Results",
+                csv,
+                "batch_predictions.csv",
+                "text/csv"
+            )
+
+        except Exception as e:
+            st.error("❌ Invalid CSV format or feature mismatch")
+
+
 def data_insights_page():
 
     import pandas as pd
@@ -469,7 +545,7 @@ def main_app():
 
     menu = st.sidebar.radio(
         "🧭 Navigation",
-        ["Dashboard", "Prediction", "Data Insights", "About"],
+        ["Dashboard", "Prediction", "Batch Prediciton", "Data Insights", "About"],
         label_visibility="visible"
     )
 
@@ -483,6 +559,8 @@ def main_app():
         dashboard()
     elif menu == "Prediction":
         prediction_page()
+    elif menu == "Batch Prediction":
+        batch_prediction_page()
     elif menu == "Data Insights":
         data_insights_page()
     else:
