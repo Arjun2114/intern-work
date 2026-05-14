@@ -365,7 +365,6 @@ def prediction_page():
             """, unsafe_allow_html=True)
 
 
-# ---------------- BATCH PREDICTION PAGE ---------------- #
 def batch_prediction_page():
 
     st.title("📂 Batch Employee Prediction")
@@ -376,15 +375,12 @@ def batch_prediction_page():
                     padding: 1.5rem; border-radius: 12px; color: white; margin-bottom: 2rem;'>
             <h3 style='color: white; margin: 0 0 0.5rem 0;'>📤 Upload Employee Dataset</h3>
             <p style='color: rgba(255,255,255,0.9); margin: 0;'>
-                Upload a CSV file containing multiple employee records for bulk attrition prediction
+                Upload employee records for bulk attrition prediction
             </p>
         </div>
     """, unsafe_allow_html=True)
 
-    uploaded_file = st.file_uploader(
-        "Upload CSV File",
-        type=["csv"]
-    )
+    uploaded_file = st.file_uploader("Upload CSV File", type=["csv"])
 
     if uploaded_file is not None:
 
@@ -394,39 +390,45 @@ def batch_prediction_page():
             st.subheader("📄 Uploaded Dataset")
             st.dataframe(df.head())
 
-            # Encode categorical columns
-            df_encoded = pd.get_dummies(df)
+            # Handle OverTime conversion
+            if "OverTime" in df.columns:
+                df["OverTime"] = df["OverTime"].map({
+                    "Yes": 1,
+                    "No": 0
+                })
 
-            # Match training features
-            feature_columns = joblib.load("models/model_features.joblib")
+            required_columns = [
+                "Age",
+                "MonthlyIncome",
+                "TotalWorkingYears",
+                "YearsAtCompany",
+                "JobSatisfaction",
+                "WorkLifeBalance",
+                "EnvironmentSatisfaction",
+                "OverTime"
+            ]
 
-            df_encoded = df_encoded.reindex(
-                columns=feature_columns,
-                fill_value=0
-            )
+            # Auto reorder
+            input_data = df.reindex(columns=required_columns)
 
-            # Scale data
-            scaled_data = scaler.transform(df_encoded)
+            # Fill missing if any
+            input_data = input_data.fillna(0)
 
-            # Predictions
-            predictions = model.predict(scaled_data)
-            probabilities = model.predict_proba(scaled_data)[:, 1]
+            # Predict directly
+            predictions = model.predict(input_data)
+            probabilities = model.predict_proba(input_data)[:, 1]
 
-            # Add results
             df["Prediction"] = np.where(
                 predictions == 1,
                 "Likely to Leave",
                 "Likely to Stay"
             )
 
-            df["Attrition Probability"] = probabilities.round(2)
-
-            st.markdown("<br>", unsafe_allow_html=True)
+            df["Attrition Probability"] = (probabilities * 100).round(2)
 
             st.subheader("✅ Prediction Results")
             st.dataframe(df)
 
-            # Download results
             csv = df.to_csv(index=False).encode("utf-8")
 
             st.download_button(
@@ -437,7 +439,7 @@ def batch_prediction_page():
             )
 
         except Exception as e:
-            st.error("❌ Invalid CSV format or feature mismatch")
+            st.error(f"❌ Error: {e}")
 
 
 def data_insights_page():
