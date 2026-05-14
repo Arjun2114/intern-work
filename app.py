@@ -414,9 +414,10 @@ def batch_prediction_page():
             # Fill missing if any
             input_data = input_data.fillna(0)
 
-            # Predict directly
-            predictions = model.predict(input_data)
-            probabilities = model.predict_proba(input_data)[:, 1]
+            scaled_data = scaler.transform(input_data)
+
+            predictions = model.predict(scaled_data)
+            probabilities = model.predict_proba(scaled_data)[:, 1]
 
             df["Prediction"] = np.where(
                 predictions == 1,
